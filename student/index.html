@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Negotiation Module, Student Hub | Port Virtual Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0C4494;
+    --navy-deep:#082e63;
+    --blue:#468BD0;
+    --amber:#FCB434;
+    --orange:#E84E1B;
+    --bg:#F6F8FB;
+    --paper:#FFFFFF;
+    --ink:#182338;
+    --ink-soft:#5A6478;
+    --line:#E4E9F1;
+    --radius:16px;
+    --shadow:0 20px 40px -20px rgba(12,68,148,0.25);
+    --font-head:'Poppins', sans-serif;
+    --font-body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+
+  :focus-visible{outline:3px solid var(--amber); outline-offset:3px; border-radius:6px;}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,255,255,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1120px;margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand img{height:34px;width:auto;}
+  .nav-links{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+  .nav-links a{
+    font-family:var(--font-head);font-weight:600;font-size:14.5px;
+    text-decoration:none;color:var(--ink-soft);
+    padding:6px 2px;border-bottom:2px solid transparent;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .nav-links a:hover{color:var(--navy);border-color:var(--amber);}
+  .nav-cta{
+    font-family:var(--font-head);font-weight:700;font-size:14px;
+    background:var(--navy);color:#fff;padding:10px 18px;border-radius:999px;
+    text-decoration:none; white-space:nowrap;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .nav-cta:hover{background:var(--navy-deep); transform:translateY(-1px);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:linear-gradient(155deg, var(--navy) 0%, var(--navy-deep) 62%, #061f45 100%);
+    color:#fff;
+    overflow:hidden;
+    padding:88px 0 96px;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr 0.85fr;gap:48px;align-items:center;
+    position:relative;z-index:2;
+  }
+  .eyebrow{
+    font-family:var(--font-head);font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;font-size:13px;color:var(--amber);
+    display:flex;align-items:center;gap:10px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--amber);display:inline-block;}
+  .hero h1{
+    font-family:var(--font-head);font-weight:800;
+    font-size:clamp(32px,4.2vw,50px);line-height:1.08;letter-spacing:-0.01em;
+    margin:0 0 20px;
+  }
+  .hero p.lead{
+    font-size:17.5px;color:#D9E4F6;max-width:480px;margin:0 0 34px;
+  }
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--font-head);font-weight:700;font-size:15px;
+    padding:14px 26px;border-radius:12px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    border:2px solid transparent;cursor:pointer;
+  }
+  .btn-primary{background:var(--amber);color:var(--navy-deep);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(252,180,52,0.55);}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,0.4);}
+  .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,0.08);}
+  .btn-outline{background:transparent;color:var(--navy);border-color:var(--navy);}
+  .btn-outline:hover{background:var(--navy);color:#fff;}
+  .btn svg{width:16px;height:16px;flex-shrink:0;}
+
+  /* signature: container-block motif echoing the PVL logo geometry */
+  .hero-art{position:relative;height:340px;}
+  .stack{
+    position:absolute;inset:0;
+    display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);
+    gap:10px;
+  }
+  .stack i{
+    border-radius:6px;
+    opacity:0;
+    animation:pop .5s ease forwards;
+  }
+  @keyframes pop{ to{opacity:1; transform:none;} from{opacity:0; transform:translateY(6px) scale(.94);} }
+  .hero::after{
+    content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;
+    background:radial-gradient(circle, rgba(70,139,208,0.35), transparent 70%);
+    z-index:1;
+  }
+
+  /* ---------- STEPS ---------- */
+  .steps{padding:76px 0 20px;}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .kicker{
+    font-family:var(--font-head);font-weight:700;color:var(--blue);
+    text-transform:uppercase;letter-spacing:.12em;font-size:12.5px;margin-bottom:10px;
+  }
+  .section-head h2{
+    font-family:var(--font-head);font-weight:700;font-size:clamp(24px,3vw,32px);
+    margin:0 0 10px;color:var(--navy-deep);
+  }
+  .section-head p{color:var(--ink-soft);margin:0;font-size:15.5px;max-width:520px;}
+
+  .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .step-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 24px;position:relative;overflow:hidden;
+  }
+  .step-num{
+    font-family:var(--font-head);font-weight:800;font-size:34px;
+    color:var(--line);position:absolute;top:14px;right:20px;line-height:1;
+  }
+  .step-card h3{
+    font-family:var(--font-head);font-weight:700;font-size:17px;margin:6px 0 8px;color:var(--navy-deep);
+  }
+  .step-card p{margin:0;color:var(--ink-soft);font-size:14.5px;}
+  .step-card .tag{
+    display:inline-block;font-family:var(--font-head);font-weight:700;font-size:11px;
+    letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:4px 10px;border-radius:999px;margin-bottom:12px;
+  }
+  .step-card:nth-child(1) .tag{background:var(--blue);}
+  .step-card:nth-child(2) .tag{background:var(--amber);color:var(--navy-deep);}
+  .step-card:nth-child(3) .tag{background:var(--orange);}
+
+  /* ---------- GUIDES ---------- */
+  .guides{padding:64px 0;}
+  .guide-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .guide-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px;display:flex;flex-direction:column;gap:16px;
+    box-shadow:var(--shadow); position:relative;
+  }
+  .guide-icon{
+    width:52px;height:52px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg, var(--navy), var(--blue));color:#fff;
+  }
+  .guide-icon svg{width:24px;height:24px;}
+  .guide-card h3{font-family:var(--font-head);font-size:19px;margin:0;color:var(--navy-deep);}
+  .guide-card p{margin:0;color:var(--ink-soft);font-size:14.5px;flex-grow:1;}
+  .guide-meta{display:flex;gap:14px;font-size:12.5px;color:var(--ink-soft);font-family:var(--font-head);font-weight:600;}
+  .guide-meta span{display:flex;align-items:center;gap:6px;}
+
+  /* ---------- INSTITUTE CODE ---------- */
+  .code-section{padding:64px 0 88px;}
+  .code-panel{
+    background:linear-gradient(135deg, #0d3f86, var(--navy-deep));
+    border-radius:24px;color:#fff;padding:44px;
+    display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  .code-panel::before{
+    content:"";position:absolute;left:-60px;bottom:-90px;width:260px;height:260px;
+    background:radial-gradient(circle, rgba(252,180,52,0.25), transparent 70%);
+  }
+  .code-copy h2{font-family:var(--font-head);font-size:26px;margin:0 0 12px;font-weight:700;}
+  .code-copy p{color:#CBDAF2;font-size:15px;margin:0 0 0;max-width:400px;}
+  .code-box{
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);
+    border-radius:16px;padding:24px;backdrop-filter:blur(6px);
+  }
+  .code-box label{
+    display:block;font-family:var(--font-head);font-weight:600;font-size:13px;
+    color:#AFC6EA;margin-bottom:8px;
+  }
+  select#institutionSelect{
+    width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.08);color:#fff;font-family:var(--font-body);font-size:14.5px;
+    margin-bottom:18px;
+  }
+  select#institutionSelect option{color:#111;}
+  .code-result{
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(255,255,255,0.1);border-radius:12px;padding:16px 18px;
+  }
+  .code-value{font-family:var(--font-head);font-weight:800;font-size:26px;letter-spacing:.06em;color:var(--amber);}
+  .copy-btn{
+    font-family:var(--font-head);font-weight:700;font-size:13px;color:#fff;
+    background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.3);
+    padding:9px 14px;border-radius:9px;cursor:pointer;transition:background .18s ease;
+    display:flex;align-items:center;gap:6px;
+  }
+  .copy-btn:hover{background:rgba(255,255,255,0.24);}
+  .copy-btn svg{width:14px;height:14px;}
+  .demo-note{
+    margin-top:16px;font-size:12.5px;color:#9FB4DC;display:flex;gap:8px;align-items:flex-start;
+  }
+  .demo-note svg{width:15px;height:15px;flex-shrink:0;margin-top:2px;}
+
+  /* ---------- FAQ ---------- */
+  .faq{padding:64px 0;}
+  .faq-list{display:flex;flex-direction:column;gap:14px;max-width:760px;}
+
+  /* ---------- GLOSSARY ---------- */
+  .glossary{padding:64px 0;}
+  .gloss-search{
+    width:100%;max-width:520px;font-family:var(--font-body);font-size:14.5px;
+    padding:12px 16px;border:1.5px solid var(--line);border-radius:12px;
+    margin-bottom:20px;color:var(--ink);
+  }
+  .gloss-search:focus{outline:none;border-color:var(--blue);}
+  .gloss-list{display:flex;flex-direction:column;gap:8px;max-width:800px;}
+  .gloss-letter{
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  }
+  .gloss-letter-head{
+    padding:12px 18px;font-family:var(--font-head);font-weight:700;font-size:14px;color:var(--navy-deep);
+    cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;
+    background:#F6F8FC;
+  }
+  .gloss-letter-head .chev{transition:transform .2s ease;color:var(--blue);}
+  .gloss-letter.open .gloss-letter-head .chev{transform:rotate(180deg);}
+  .gloss-entries{display:none;padding:10px 18px 14px;}
+  .gloss-letter.open .gloss-entries{display:block;}
+  .gloss-entry{
+    font-size:13.5px;color:var(--ink-soft);padding:6px 0;border-bottom:1px dashed var(--line);line-height:1.5;
+  }
+  .gloss-entry:last-child{border-bottom:none;}
+  .gloss-entry strong{color:var(--navy);font-family:var(--font-head);font-weight:600;}
+  .gloss-hidden{display:none !important;}
+  .faq-item{
+    background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;
+  }
+  .faq-q{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    background:none;border:none;cursor:pointer;padding:20px 24px;text-align:left;
+    font-family:var(--font-head);font-weight:700;font-size:15.5px;color:var(--navy-deep);
+  }
+  .faq-q svg{width:18px;height:18px;flex-shrink:0;color:var(--blue);transition:transform .2s ease;}
+  .faq-item.open .faq-q svg{transform:rotate(180deg);}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height .25s ease;
+  }
+  .faq-item.open .faq-a{max-height:200px;}
+  .faq-a p{margin:0;padding:0 24px 20px;color:var(--ink-soft);font-size:14.5px;line-height:1.6;}
+
+  /* ---------- FEEDBACK ---------- */
+  .feedback{padding:20px 0 70px;}
+  .feedback-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:36px 40px;
+    display:grid;grid-template-columns:0.9fr 1.1fr;gap:36px;align-items:center;
+  }
+  .feedback-copy h2{font-family:var(--font-head);font-weight:800;font-size:24px;margin:0 0 8px;color:var(--navy-deep);}
+  .feedback-copy p{margin:0;color:var(--ink-soft);font-size:14.5px;}
+  .feedback-form{display:flex;flex-direction:column;gap:12px;}
+  .feedback-stars{display:flex;gap:6px;}
+  .feedback-stars .star{
+    background:none;border:none;cursor:pointer;font-size:28px;line-height:1;
+    color:var(--line);transition:color .15s ease,transform .1s ease;padding:0;
+  }
+  .feedback-stars .star:hover{transform:scale(1.12);}
+  .feedback-stars .star.filled{color:var(--amber);}
+  .feedback-text{
+    font-family:var(--font-body);font-size:14.5px;padding:12px 14px;
+    border:1px solid var(--line);border-radius:12px;resize:vertical;color:var(--ink);
+  }
+  .feedback-form .btn{align-self:flex-start;}
+  @media(max-width:760px){
+    .feedback-card{grid-template-columns:1fr;}
+  }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{padding:20px 0 90px;}
+  .cta-band{
+    background:linear-gradient(120deg, var(--amber), #f5a11f);
+    border-radius:24px;padding:48px 44px;
+    display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;
+  }
+  .cta-band h2{
+    font-family:var(--font-head);font-weight:800;font-size:clamp(22px,2.6vw,28px);
+    color:var(--navy-deep);margin:0 0 6px;
+  }
+  .cta-band p{margin:0;color:#7a5205;font-size:15px;max-width:420px;}
+  .cta-band .btn-primary{background:var(--navy);color:#fff;}
+  .cta-band .btn-primary:hover{box-shadow:0 14px 28px -10px rgba(12,68,148,0.5);}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);padding:34px 0;background:var(--paper);
+  }
+  .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-inner .brand img{height:24px;}
+  footer .fine{color:var(--ink-soft);font-size:13px;}
+  .footer-links{display:flex;gap:20px;list-style:none;padding:0;margin:0;}
+  .footer-links a{font-size:13.5px;color:var(--ink-soft);text-decoration:none;}
+  .footer-links a:hover{color:var(--navy);}
+  .footer-contact{text-align:right;}
+  .footer-contact-title{
+    font-family:var(--font-head);font-weight:700;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--navy);margin-bottom:6px;
+  }
+  .footer-contact-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;}
+  .footer-contact-list li{font-size:12.5px;color:var(--ink-soft);}
+  .footer-contact-list a{color:var(--blue);text-decoration:none;}
+  .footer-contact-list a:hover{text-decoration:underline;}
+  @media(max-width:760px){
+    .footer-contact{text-align:left;}
+  }
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-art{height:220px;order:-1;}
+    .steps-row{grid-template-columns:1fr;}
+    .guide-row{grid-template-columns:1fr;}
+    .code-panel{grid-template-columns:1fr;padding:30px;}
+    .cta-band{flex-direction:column;align-items:flex-start;}
+    .nav-links{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .stack i{animation:none;opacity:1;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <img src="assets/logo-pvl.png" alt="Port Virtual Lab"><span style="display:inline-block;width:1px;height:26px;background:var(--line);margin:0 4px;"></span><img src="assets/logo-escola-europea.png" alt="Escola Europea" style="height:38px;width:auto;">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#steps">How it works</a></li>
+      <li><a href="#guides">Guide</a></li>
+      <li><a href="#faq">Q&amp;A</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#code">Say Your Name</a></li>
+      <li><a href="#feedback">Feedback</a></li>
+    </ul>
+    <a class="nav-cta" href="#access">Access the Module →</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Student Hub</div>
+      <h1>Everything you need for the Negotiation Module, in one place.</h1>
+      <p class="lead">Download the Student Guide, say your full name at the start of your call, and launch the simulation. No hunting through folders.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#access" id="heroAccessBtn">
+          Access the Negotiation Module
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#guides">View the guide</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="stack" id="containerStack"></div>
+    </div>
+  </div>
+</section>
+
+<section class="steps" id="steps">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Before you start</div>
+      <h2>Three things, in order</h2>
+      <p>This is the sequence you follow every time, get your guide, say your name, launch the activity.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <span class="tag">Prepare</span>
+        <h3>Get your guide</h3>
+        <p>Download the Student Guide. Read the scenario, your role, and the assessment criteria before your call.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <span class="tag">Confirm</span>
+        <h3>Say your full name</h3>
+        <p>Say your first and last name clearly at the start of the call, it's the only thing that registers your session.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <span class="tag">Launch</span>
+        <h3>Access the module</h3>
+        <p>Open the Negotiation Model, say your full name, and start your simulation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="guides" id="guides">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Downloadable resources</div>
+      <h2>Student Guide</h2>
+      <p>Everything a student needs before the simulation, scenario, roles, access steps, rules, and assessment criteria.</p>
+    </div>
+    <div class="guide-row" style="grid-template-columns:1fr;max-width:420px;">
+      <div class="guide-card">
+        <div class="guide-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <h3>Student Guide</h3>
+        <p>Scenario overview, roles, access steps, activity rules, assessment criteria, and FAQs, everything a student needs before the simulation.</p>
+        <div class="guide-meta">
+          <span>📄 DOCX</span>
+          <span>7 pages</span>
+        </div>
+        <a class="btn btn-outline" href="assets/student-guide.docx" download="Student Guide.docx">
+          Download Student Guide
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:48px;">
+      <div class="kicker">Listen &amp; learn</div>
+      <h2>Sample negotiation calls</h2>
+      <p>Two real audio examples students can listen to before their own call, useful as a warm-up or classroom listening exercise.</p>
+    </div>
+    <div class="guide-row">
+      <div class="guide-card">
+        <div class="guide-icon" style="background:linear-gradient(135deg, var(--blue), var(--navy));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <h3>Audio 1, Sample Call</h3>
+        <p>A short example negotiation call, good for a quick classroom listen before the activity.</p>
+        <audio controls style="width:100%;margin-top:6px;">
+          <source src="assets/negotiation-call.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon" style="background:linear-gradient(135deg, var(--navy), var(--blue));">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <h3>Audio 2, Full-Length Call</h3>
+        <p>The full-length version of the same call, useful for a deeper listening or debrief exercise.</p>
+        <audio controls style="width:100%;margin-top:6px;">
+          <source src="assets/negotiation-call.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Common questions</div>
+      <h2>Questions &amp; Answers</h2>
+      <p>Quick answers your students may need before or during the activity.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span>What happens if we can't reach an agreement?</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>That's a valid outcome. Declare an impasse and be ready to explain, in the debrief, why no agreement was better than the alternatives on the table.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span>Can students renegotiate after the session ends?</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>No. The activity is scored on what is agreed (or not agreed) within the set time, students should use the full time to explore options.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span>What if a student forgets to say their name?</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Their negotiation session won't be registered by Negotiation Model. Ask them to redo the call and say their first and last name clearly at the very start.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span>How do students know how they did?</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Run a debrief session using the Assessment Criteria in the Student Guide, reports are also emailed to you after each call.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="glossary" id="glossary">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Reference</div>
+      <h2>PVL Glossary</h2>
+      <p>Every logistics and ERP term used across Open Lab and Click &amp; Cargo, in one searchable place.</p>
+    </div>
+    <input class="gloss-search" id="glossary-search" type="text" placeholder="Search a term (e.g. Incoterm, THC, EORI...)" oninput="filterGlossary()">
+    <div class="gloss-list" id="glossary-list">
+          <!-- Letter A -->
+          <div class="gloss-letter" data-letter="A">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">A <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>ADD (Adjustment Policy)</strong>, Cost element added to the invoice value to reach the customs border value under the selected Incoterm.</div>
+              <div class="gloss-entry"><strong>ADR</strong>, European Agreement concerning the International Carriage of Dangerous Goods by Road.</div>
+              <div class="gloss-entry"><strong>Air Export Shipment</strong>, Operational record created in the ERP to manage and execute an air export shipment.</div>
+              <div class="gloss-entry"><strong>Air Freight Rate</strong>, Price per kilogram applied to the chargeable weight in air transport.</div>
+              <div class="gloss-entry"><strong>Air Waybill</strong>, Non-negotiable transport document issued for air transportation; called a house air waybill when issued by a freight forwarder or consolidator.</div>
+              <div class="gloss-entry"><strong>AMS (Automated Manifest System)</strong>, U.S. advance cargo declaration system requiring electronic manifest submission before arrival.</div>
+              <div class="gloss-entry"><strong>Arrival Notice</strong>, Official notification informing the consignee that cargo has arrived at destination.</div>
+              <div class="gloss-entry"><strong>API</strong>, A set of rules and protocols enabling interaction between the Click &amp; Cargo ERP and other application systems.</div>
+              <div class="gloss-entry"><strong>Agreement</strong>, A final understanding reached by two or more parties on terms, price, or scope.</div>
+              <div class="gloss-entry"><strong>Agenda</strong>, A list of topics to be discussed in a meeting or negotiation.</div>
+              <div class="gloss-entry"><strong>Alliance</strong>, A strategic partnership between companies to achieve shared goals.</div>
+              <div class="gloss-entry"><strong>Anchor</strong>, The first offer or reference point that influences the rest of a negotiation.</div>
+              <div class="gloss-entry"><strong>Authority</strong>, The decision-making power to approve, reject, or modify a proposal.</div>
+            </div>
+          </div>
+          <!-- Letter B -->
+          <div class="gloss-letter" data-letter="B">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">B <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>BAF (Bunker Adjustment Factor)</strong>, Fuel surcharge applied to ocean freight to reflect fuel price fluctuations.</div>
+              <div class="gloss-entry"><strong>Bill of Lading (B/L)</strong>, Transport document acknowledging receipt of cargo; certifies loading (export) or unloading (import).</div>
+              <div class="gloss-entry"><strong>Bill of Lading Charge</strong>, Fee applied per issued Bill of Lading document.</div>
+              <div class="gloss-entry"><strong>Border Value</strong>, Value of goods at the EU border used to assess customs duties.</div>
+              <div class="gloss-entry"><strong>BATNA</strong>, Best Alternative to a Negotiated Agreement; the best option available if no deal is reached.</div>
+              <div class="gloss-entry"><strong>Benchmark</strong>, A reference used to compare prices, performance, or processes.</div>
+              <div class="gloss-entry"><strong>Break-even Point</strong>, The sales level at which revenue equals total costs.</div>
+              <div class="gloss-entry"><strong>Budget</strong>, The financial limit available for a project, purchase, or operation.</div>
+              <div class="gloss-entry"><strong>Broker</strong>, An intermediary who facilitates transactions between buyer and seller.</div>
+            </div>
+          </div>
+          <!-- Letter C -->
+          <div class="gloss-letter" data-letter="C">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">C <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>CAF (Currency Adjustment Factor)</strong>, Surcharge applied due to exchange rate fluctuations affecting ocean freight.</div>
+              <div class="gloss-entry"><strong>Cargo Insurance</strong>, Coverage typically calculated at 110% of the commercial invoice value.</div>
+              <div class="gloss-entry"><strong>Cargo Type</strong>, Classification of cargo category (general cargo, dangerous goods, reefer, etc.).</div>
+              <div class="gloss-entry"><strong>Carrier</strong>, Individual or legal entity transporting goods.</div>
+              <div class="gloss-entry"><strong>Case ID</strong>, Internal reference assigned to a customs declaration in the H1 simulator.</div>
+              <div class="gloss-entry"><strong>Chargeable Weight</strong>, Higher of Gross Weight or Volumetric Weight, used for air freight calculation.</div>
+              <div class="gloss-entry"><strong>CIF</strong>, Incoterm where freight and insurance are included in the invoice value up to the destination port.</div>
+              <div class="gloss-entry"><strong>CIP</strong>, Incoterm where the seller pays transport and insurance to a named destination; used as customs value target in PVL.</div>
+              <div class="gloss-entry"><strong>CMR</strong>, Convention on the Contract for the International Carriage by Road.</div>
+              <div class="gloss-entry"><strong>Collect</strong>, Transport charges payable by the consignee.</div>
+              <div class="gloss-entry"><strong>Commercial Offer</strong>, Structured quotation generated in the ERP.</div>
+              <div class="gloss-entry"><strong>Consignee</strong>, Named person/entity with the right to claim the merchandise at destination.</div>
+              <div class="gloss-entry"><strong>Container Transport Order</strong>, Instruction to arrange inland movement of a container after port discharge.</div>
+              <div class="gloss-entry"><strong>Customs Clearance</strong>, Process of declaring goods to customs authorities.</div>
+              <div class="gloss-entry"><strong>Customs Value</strong>, Value at the EU border used to calculate duties. Formula: CIP = Invoice Value + Net Adjustment.</div>
+              <div class="gloss-entry"><strong>Cash Flow</strong>, The movement of money into and out of a business.</div>
+              <div class="gloss-entry"><strong>Closing</strong>, The stage where a sale or agreement is finalized.</div>
+              <div class="gloss-entry"><strong>Commission</strong>, A variable payment linked to the result of a sale or transaction.</div>
+              <div class="gloss-entry"><strong>Competitive Advantage</strong>, A factor that makes a company more attractive than its competitors.</div>
+              <div class="gloss-entry"><strong>Contract</strong>, A legally binding agreement that defines rights and obligations.</div>
+              <div class="gloss-entry"><strong>Counteroffer</strong>, A response to an initial offer with revised terms.</div>
+              <div class="gloss-entry"><strong>Customer Acquisition</strong>, The process of winning new clients.</div>
+            </div>
+          </div>
+          <!-- Letter D -->
+          <div class="gloss-letter" data-letter="D">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">D <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>DDP</strong>, Incoterm where the seller assumes almost all responsibilities, including destination costs.</div>
+              <div class="gloss-entry"><strong>Declarant</strong>, Customs representative filing the declaration on behalf of the importer.</div>
+              <div class="gloss-entry"><strong>Destination Free Days</strong>, Days allowed at destination terminal before storage/demurrage charges apply.</div>
+              <div class="gloss-entry"><strong>Documentation Fee</strong>, Administrative fee related to issuing transport documentation.</div>
+              <div class="gloss-entry"><strong>Door-to-Door / Door-to-Port</strong>, Transport service scope from seller's premises to buyer's premises or destination port.</div>
+              <div class="gloss-entry"><strong>Duty % (Tariff Rate)</strong>, Percentage applied to customs value according to HS Code classification.</div>
+              <div class="gloss-entry"><strong>Deal</strong>, A commercial transaction or closed agreement.</div>
+              <div class="gloss-entry"><strong>Demand</strong>, The market need or desire for a product or service.</div>
+              <div class="gloss-entry"><strong>Discount</strong>, A reduction applied to the original price.</div>
+              <div class="gloss-entry"><strong>Due Diligence</strong>, A review of facts, risks, and conditions before completing a transaction.</div>
+              <div class="gloss-entry"><strong>Distribution</strong>, The process of delivering products from the company to the customer.</div>
+            </div>
+          </div>
+          <!-- Letter E -->
+          <div class="gloss-letter" data-letter="E">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">E <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>EORI</strong>, EU identification number required for customs operations.</div>
+              <div class="gloss-entry"><strong>ERP</strong>, Software used to manage logistics operations (e.g., Click &amp; Cargo).</div>
+              <div class="gloss-entry"><strong>ETS</strong>, EU carbon Emission Trading System impacting maritime freight pricing.</div>
+              <div class="gloss-entry"><strong>ETA / ETD</strong>, Estimated Time of Arrival / Departure of vessel or aircraft.</div>
+              <div class="gloss-entry"><strong>EUR-1</strong>, Certifies origin of goods for preferential tariff treatment under trade agreements.</div>
+              <div class="gloss-entry"><strong>EXW (Ex Works)</strong>, Incoterm where the buyer assumes most responsibilities from the seller's premises.</div>
+              <div class="gloss-entry"><strong>Ecosystem</strong>, The network of partners, customers, suppliers, and tools around a business.</div>
+              <div class="gloss-entry"><strong>Equity</strong>, Ownership value in a company after liabilities are deducted.</div>
+              <div class="gloss-entry"><strong>Escalation</strong>, A rise in conflict, urgency, or decision level.</div>
+              <div class="gloss-entry"><strong>Execution</strong>, The act of carrying out a business plan or agreement.</div>
+              <div class="gloss-entry"><strong>Expansion</strong>, Growth into new markets, products, or channels.</div>
+            </div>
+          </div>
+          <!-- Letter F -->
+          <div class="gloss-letter" data-letter="F">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">F <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>FCL</strong>, Full Container Load, used exclusively by one shipper.</div>
+              <div class="gloss-entry"><strong>Flow</strong>, Direction of cargo movement (Export / Import).</div>
+              <div class="gloss-entry"><strong>Freight</strong>, International main carriage cost.</div>
+              <div class="gloss-entry"><strong>Freight Forwarder</strong>, Intermediary managing logistics and transportation of cargo.</div>
+              <div class="gloss-entry"><strong>Fidelity</strong>, The ability to retain customers over time.</div>
+              <div class="gloss-entry"><strong>Forecast</strong>, A projection of future sales, revenue, or demand.</div>
+              <div class="gloss-entry"><strong>Franchise</strong>, A business model that allows others to operate under an established brand.</div>
+              <div class="gloss-entry"><strong>Free Cash Flow</strong>, Cash remaining after operating and investment expenses.</div>
+              <div class="gloss-entry"><strong>Fulfilment</strong>, The complete process of receiving, preparing, and delivering an order.</div>
+            </div>
+          </div>
+          <!-- Letter G -->
+          <div class="gloss-letter" data-letter="G">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">G <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Goods Delivery</strong>, Final stage of import where cargo is delivered to consignee.</div>
+              <div class="gloss-entry"><strong>Gross Weight</strong>, Total weight of goods including packaging.</div>
+              <div class="gloss-entry"><strong>Gain</strong>, The positive financial result obtained from a transaction.</div>
+              <div class="gloss-entry"><strong>Guarantee</strong>, A promise that a product, service, or obligation will be fulfilled.</div>
+              <div class="gloss-entry"><strong>Growth</strong>, An increase in revenue, customers, or market share.</div>
+              <div class="gloss-entry"><strong>Go-to-Market</strong>, The plan used to launch and sell a product or service.</div>
+              <div class="gloss-entry"><strong>Governance</strong>, The rules and oversight that guide business decisions.</div>
+            </div>
+          </div>
+          <!-- Letter H -->
+          <div class="gloss-letter" data-letter="H">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">H <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>H1 Declaration</strong>, EU customs declaration for release for free circulation (simulated in PVL).</div>
+              <div class="gloss-entry"><strong>H1 Import Simulator Pro</strong>, Educational tool to simulate EU customs declarations.</div>
+              <div class="gloss-entry"><strong>HS Code</strong>, Harmonized System classification number used to determine duty rates.</div>
+              <div class="gloss-entry"><strong>Handover</strong>, The transfer of responsibility from one party to another.</div>
+              <div class="gloss-entry"><strong>Hedge</strong>, An action taken to reduce financial or commercial risk.</div>
+              <div class="gloss-entry"><strong>Hierarchy</strong>, The structure of authority and decision-making inside an organization.</div>
+              <div class="gloss-entry"><strong>Hub</strong>, A central point for operations, logistics, or commercial activity.</div>
+              <div class="gloss-entry"><strong>Holding</strong>, A parent company that owns controlling interests in other firms.</div>
+            </div>
+          </div>
+          <!-- Letter I -->
+          <div class="gloss-letter" data-letter="I">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">I <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>IATA</strong>, International Air Transport Association.</div>
+              <div class="gloss-entry"><strong>IMO Surcharge</strong>, Fee applied to dangerous goods shipments under IMO rules.</div>
+              <div class="gloss-entry"><strong>Incoterms</strong>, 11 international standard trade terms (latest: Incoterms 2020) dividing costs/risks between seller and buyer.</div>
+              <div class="gloss-entry"><strong>Inland Transport</strong>, Pre-carriage (before main carriage) or on-carriage (after arrival).</div>
+              <div class="gloss-entry"><strong>Insurance</strong>, Coverage against loss/damage, ~110% of invoice value; simulated via Play TT Circle in PVL.</div>
+              <div class="gloss-entry"><strong>Invoice Value</strong>, Commercial invoice total under selected Incoterm.</div>
+              <div class="gloss-entry"><strong>Incentive</strong>, A reward or benefit used to encourage a desired action.</div>
+              <div class="gloss-entry"><strong>Income</strong>, Money earned through sales, services, or investments.</div>
+              <div class="gloss-entry"><strong>Indexation</strong>, Adjusting a value according to an index, such as inflation or exchange rates.</div>
+              <div class="gloss-entry"><strong>Innovation</strong>, The introduction of new ideas, products, or methods.</div>
+              <div class="gloss-entry"><strong>Investment</strong>, Resources allocated today to generate future returns.</div>
+            </div>
+          </div>
+          <!-- Letter J -->
+          <div class="gloss-letter" data-letter="J">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">J <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Joint Venture</strong>, A business arrangement in which two parties share a project, risk, and return.</div>
+              <div class="gloss-entry"><strong>Justification</strong>, The business reason supporting a decision or proposal.</div>
+            </div>
+          </div>
+          <!-- Letter K -->
+          <div class="gloss-letter" data-letter="K">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">K <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Key Account</strong>, A strategically important customer managed with special attention.</div>
+              <div class="gloss-entry"><strong>KPI</strong>, Key Performance Indicator; a metric used to measure business performance.</div>
+              <div class="gloss-entry"><strong>Know-how</strong>, Practical knowledge and expertise accumulated by a company or team.</div>
+            </div>
+          </div>
+          <!-- Letter L -->
+          <div class="gloss-letter" data-letter="L">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">L <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>LCL</strong>, Less than Container Load; shared container space.</div>
+              <div class="gloss-entry"><strong>Logistics Management</strong>, Administrative coordination fee covering shipment management.</div>
+              <div class="gloss-entry"><strong>Lead</strong>, A potential customer with commercial interest.</div>
+              <div class="gloss-entry"><strong>Leverage</strong>, An advantage or bargaining power used to influence an outcome.</div>
+              <div class="gloss-entry"><strong>Liquidity</strong>, The ability of a business to meet short-term obligations.</div>
+              <div class="gloss-entry"><strong>Logistics</strong>, The planning and management of flow, storage, and delivery.</div>
+              <div class="gloss-entry"><strong>LTV</strong>, Lifetime Value; the total expected value a customer generates over time.</div>
+            </div>
+          </div>
+          <!-- Letter M -->
+          <div class="gloss-letter" data-letter="M">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">M <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Main Transport Costs</strong>, Freight and insurance costs of international carriage.</div>
+              <div class="gloss-entry"><strong>Master Air Waybill / Master Bill of Lading</strong>, Issued by the airline / shipping line (main carrier).</div>
+              <div class="gloss-entry"><strong>MRN</strong>, Movement Reference Number; unique tracking number for customs declarations.</div>
+              <div class="gloss-entry"><strong>MTO</strong>, Multimodal Transport Operator, responsible for the entire transport chain.</div>
+              <div class="gloss-entry"><strong>Margin</strong>, The difference between revenue and cost.</div>
+              <div class="gloss-entry"><strong>Market Share</strong>, The portion of total market sales captured by a company.</div>
+              <div class="gloss-entry"><strong>Mediation</strong>, A process where a neutral third party helps parties reach an agreement.</div>
+              <div class="gloss-entry"><strong>Merger</strong>, The combination of two companies into one business entity.</div>
+              <div class="gloss-entry"><strong>Model</strong>, The way a business creates, delivers, and captures value.</div>
+            </div>
+          </div>
+          <!-- Letter N -->
+          <div class="gloss-letter" data-letter="N">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">N <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Net Adjustment</strong>, Total amount added/subtracted from invoice value to reach customs border value.</div>
+              <div class="gloss-entry"><strong>Net Weight</strong>, Weight of goods excluding packaging.</div>
+              <div class="gloss-entry"><strong>Notify Party</strong>, The person a carrier notifies of a shipment's arrival.</div>
+              <div class="gloss-entry"><strong>NVOCC</strong>, Non-Vessel Operating Common Carrier; consolidates shipments without owning ships.</div>
+              <div class="gloss-entry"><strong>Negotiation</strong>, A process to reach an agreement between parties with different interests.</div>
+              <div class="gloss-entry"><strong>Net Profit</strong>, Profit remaining after all costs, taxes, and expenses.</div>
+              <div class="gloss-entry"><strong>Niche</strong>, A focused market segment with specific needs.</div>
+              <div class="gloss-entry"><strong>Networking</strong>, Building professional relationships that can generate business opportunities.</div>
+            </div>
+          </div>
+          <!-- Letter O -->
+          <div class="gloss-letter" data-letter="O">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">O <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Ocean Freight</strong>, Base maritime freight cost excluding surcharges.</div>
+              <div class="gloss-entry"><strong>Origin Costs</strong>, Terminal, inland and customs charges incurred before export departure.</div>
+              <div class="gloss-entry"><strong>Opportunity</strong>, A possible sale or project with commercial potential.</div>
+              <div class="gloss-entry"><strong>Offer</strong>, A commercial proposal with price and conditions.</div>
+              <div class="gloss-entry"><strong>Operating Model</strong>, The way an organization runs its processes and resources.</div>
+              <div class="gloss-entry"><strong>Outcome</strong>, The result of a business decision, action, or negotiation.</div>
+              <div class="gloss-entry"><strong>Outsourcing</strong>, Delegating a task or function to an external provider.</div>
+            </div>
+          </div>
+          <!-- Letter P -->
+          <div class="gloss-letter" data-letter="P">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">P <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Packages</strong>, Number of handling units included in shipment.</div>
+              <div class="gloss-entry"><strong>Plug-in (Reefer)</strong>, Electrical connection fee for refrigerated containers.</div>
+              <div class="gloss-entry"><strong>POL / POD</strong>, Port of Loading / Port of Discharge.</div>
+              <div class="gloss-entry"><strong>Port Taxes</strong>, Official port authority charges.</div>
+              <div class="gloss-entry"><strong>Pre-Alert</strong>, Advance notification sent before cargo arrival with documentation.</div>
+              <div class="gloss-entry"><strong>Prepaid</strong>, Freight charges paid by the shipper.</div>
+              <div class="gloss-entry"><strong>Pricing Structure</strong>, Method used to calculate freight/surcharges (per container, ton, day, %, document).</div>
+              <div class="gloss-entry"><strong>Pipeline</strong>, The stage-by-stage flow of sales opportunities.</div>
+              <div class="gloss-entry"><strong>Position</strong>, The formal stance a party takes during a negotiation.</div>
+              <div class="gloss-entry"><strong>Portfolio</strong>, The collection of products, services, or clients managed by a company.</div>
+              <div class="gloss-entry"><strong>Profitability</strong>, The capacity to generate profit.</div>
+              <div class="gloss-entry"><strong>Proposal</strong>, A formal offer presented to a client or partner.</div>
+              <div class="gloss-entry"><strong>Prospection</strong>, The search for new clients or opportunities.</div>
+            </div>
+          </div>
+          <!-- Letter R -->
+          <div class="gloss-letter" data-letter="R">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">R <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Rate Sheet</strong>, Structured table of freight rates and surcharge conditions.</div>
+              <div class="gloss-entry"><strong>Ro-Ro</strong>, Roll-on/Roll-off shipping for wheeled cargo.</div>
+              <div class="gloss-entry"><strong>Rate</strong>, A price, fee, or percentage applied to a business transaction.</div>
+              <div class="gloss-entry"><strong>Return on Investment</strong>, A measure of profit relative to the amount invested.</div>
+              <div class="gloss-entry"><strong>Revenue</strong>, Income generated by sales or services.</div>
+              <div class="gloss-entry"><strong>Risk</strong>, The possibility of loss, delay, or failure.</div>
+              <div class="gloss-entry"><strong>Retention</strong>, The ability to keep customers active over time.</div>
+            </div>
+          </div>
+          <!-- Letter S -->
+          <div class="gloss-letter" data-letter="S">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">S <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>SAD</strong>, Single Administrative Document; EU customs declaration for exports outside the EU.</div>
+              <div class="gloss-entry"><strong>Sales Agent</strong>, Representative selling on behalf of exporter/importer.</div>
+              <div class="gloss-entry"><strong>Shipper</strong>, Party contracting carriage and dispatching goods.</div>
+              <div class="gloss-entry"><strong>Surcharges</strong>, Additional mandatory charges (BAF, CAF, THC, VGM, Port Taxes, ETS).</div>
+              <div class="gloss-entry"><strong>Sales Cycle</strong>, The sequence of steps from lead generation to closing.</div>
+              <div class="gloss-entry"><strong>Segment</strong>, A group of customers with similar characteristics or needs.</div>
+              <div class="gloss-entry"><strong>Stakeholder</strong>, A person or group affected by or interested in a business decision.</div>
+              <div class="gloss-entry"><strong>Strategy</strong>, A long-term plan to achieve business goals.</div>
+              <div class="gloss-entry"><strong>Supply Chain</strong>, The network involved in producing and delivering goods.</div>
+              <div class="gloss-entry"><strong>Synergy</strong>, The extra value created when parties work together effectively.</div>
+            </div>
+          </div>
+          <!-- Letter T -->
+          <div class="gloss-letter" data-letter="T">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">T <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Tariff Rule</strong>, Rate conditions defining how freight/surcharges are applied.</div>
+              <div class="gloss-entry"><strong>TEU</strong>, Twenty-Foot Equivalent Unit; standard container capacity measure.</div>
+              <div class="gloss-entry"><strong>THC</strong>, Terminal Handling Charge for handling containers at terminal.</div>
+              <div class="gloss-entry"><strong>Transport Mode</strong>, Air, Sea, Road or Rail.</div>
+              <div class="gloss-entry"><strong>Target</strong>, The audience or market a business aims to reach.</div>
+              <div class="gloss-entry"><strong>Terms and Conditions</strong>, The rules and commitments governing a commercial relationship.</div>
+              <div class="gloss-entry"><strong>Trade-off</strong>, A compromise where gaining one benefit requires giving up another.</div>
+              <div class="gloss-entry"><strong>Transaction</strong>, A purchase, sale, or exchange of value.</div>
+              <div class="gloss-entry"><strong>Trust</strong>, Confidence between parties that supports business relationships.</div>
+            </div>
+          </div>
+          <!-- Letter U -->
+          <div class="gloss-letter" data-letter="U">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">U <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>UN/LOCODE</strong>, United Nations Location Code identifying ports/airports.</div>
+              <div class="gloss-entry"><strong>Upselling</strong>, Encouraging a customer to buy a higher-value option.</div>
+              <div class="gloss-entry"><strong>Urgency</strong>, The pressure created by limited time or availability.</div>
+              <div class="gloss-entry"><strong>User</strong>, The person who uses a product, service, or system.</div>
+            </div>
+          </div>
+          <!-- Letter V -->
+          <div class="gloss-letter" data-letter="V">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">V <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>VAT %</strong>, Value Added Tax percentage applied after duties.</div>
+              <div class="gloss-entry"><strong>VGM</strong>, Verified Gross Mass; certified container weight required before loading.</div>
+              <div class="gloss-entry"><strong>Volumetric Weight</strong>, Calculated weight based on cargo volume, used in air freight rating.</div>
+              <div class="gloss-entry"><strong>Value Proposition</strong>, The clear benefit that makes an offer attractive.</div>
+              <div class="gloss-entry"><strong>Validation</strong>, Confirmation that an idea, proposal, or assumption is correct.</div>
+              <div class="gloss-entry"><strong>Viability</strong>, The likelihood that a project or plan can work successfully.</div>
+              <div class="gloss-entry"><strong>Volume</strong>, The amount of business, sales, or orders handled.</div>
+            </div>
+          </div>
+          <!-- Letter W -->
+          <div class="gloss-letter" data-letter="W">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">W <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>Win-Win</strong>, A negotiation result where both sides gain value.</div>
+              <div class="gloss-entry"><strong>Workflow</strong>, The sequence of steps used to complete a business process.</div>
+            </div>
+          </div>
+          <!-- Letter X -->
+          <div class="gloss-letter" data-letter="X">
+            <div class="gloss-letter-head" onclick="toggleLetter(this)">X <span class="chev">▾</span></div>
+            <div class="gloss-entries">
+              <div class="gloss-entry"><strong>XML</strong>, Structured code used to exchange H1 declaration data (parties, goods, costs, customs value, duty and VAT).</div>
+            </div>
+          </div>
+    </div>
+  </div>
+</section>
+
+<section class="code-section" id="code">
+  <div class="wrap">
+    <div class="code-panel" style="grid-template-columns:1fr;">
+      <div class="code-copy" style="max-width:none;">
+        <div class="eyebrow" style="color:var(--amber);">Before the call starts</div>
+        <h2>Introduce yourself before you begin</h2>
+        <p style="max-width:640px;">Before starting your negotiation activity, please introduce yourself: state your full name, then enter your <strong>Institute Code</strong> and say your full name clearly again before beginning the simulation.</p>
+      </div>
+      <div class="code-box" style="backdrop-filter:none;background:rgba(252,180,52,0.14);border-color:rgba(252,180,52,0.4);margin-top:20px;">
+        <label style="color:var(--amber);">Why this matters</label>
+        <p style="color:#FCEFD8;font-size:14.5px;margin:0;">If a student doesn't say their full name, <strong>Negotiation Model will not register</strong> their negotiation session, no name, no report, no grade. Remind them every time.</p>
+      </div>
+      <a href="https://www.myaicorp.com/en/login?username=ia@escolaeuropea.eu&amp;password=Future9" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:20px;align-self:flex-start;">
+        Open Negotiation Model
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="access">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Ready to run the activity?</h2>
+        <p>Say your first and last name, then head to the Negotiation Model to negotiate.</p>
+      </div>
+      <a class="btn btn-primary" href="https://www.myaicorp.com/en/login?username=ia@escolaeuropea.eu&amp;password=Future9" target="_blank" rel="noopener">
+        Access the Negotiation Module
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="feedback" id="feedback">
+  <div class="wrap">
+    <div class="feedback-card">
+      <div class="feedback-copy">
+        <div class="kicker">Quick feedback</div>
+        <h2>How did it go?</h2>
+        <p>One tap and a short note, that's all we need.</p>
+      </div>
+      <div class="feedback-form">
+        <div class="feedback-stars" id="feedbackStars">
+          <button type="button" class="star" data-v="1">★</button>
+          <button type="button" class="star" data-v="2">★</button>
+          <button type="button" class="star" data-v="3">★</button>
+          <button type="button" class="star" data-v="4">★</button>
+          <button type="button" class="star" data-v="5">★</button>
+        </div>
+        <textarea class="feedback-text" placeholder="Anything that worked well or felt confusing? (optional)" rows="2"></textarea>
+        <button class="btn btn-primary" id="feedbackSubmit" type="button">
+          Send feedback
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="brand">
+      <img src="assets/logo-pvl.png" alt="Port Virtual Lab"><span style="display:inline-block;width:1px;height:26px;background:var(--line);margin:0 4px;"></span><img src="assets/logo-escola-europea.png" alt="Escola Europea" style="height:38px;width:auto;">
+    </div>
+    <ul class="footer-links">
+      <li><a href="#steps">How it works</a></li>
+      <li><a href="#guides">Guide</a></li>
+      <li><a href="#faq">Q&amp;A</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#code">Say Your Name</a></li>
+      <li><a href="#feedback">Feedback</a></li>
+    </ul>
+    <div class="footer-contact">
+      <div class="footer-contact-title">Contact us</div>
+      <ul class="footer-contact-list">
+        <li><a href="mailto:international@escolaeuropea.eu">Orlando Reveco</a></li>
+        <li><a href="mailto:digital.developer@escolaeuropea.eu">Valeria Munar Paz</a></li>
+        <li><a href="mailto:digitaltwins@portrailway.com">Ana Patricia Cabrera</a></li>
+        <li><a href="mailto:coursemanager@playpcs.com">Course Manager</a></li>
+      </ul>
+    </div>
+    <span class="fine">Negotiation Module · Student Hub</span>
+  </div>
+</footer>
+
+<script>
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+
+  // Glossary accordion + search
+  function toggleLetter(headEl){
+    headEl.parentElement.classList.toggle('open');
+  }
+  function filterGlossary(){
+    const q = document.getElementById('glossary-search').value.trim().toLowerCase();
+    document.querySelectorAll('.gloss-letter').forEach(letterEl=>{
+      let anyMatch = false;
+      letterEl.querySelectorAll('.gloss-entry').forEach(entry=>{
+        const match = q === '' || entry.textContent.toLowerCase().includes(q);
+        entry.classList.toggle('gloss-hidden', !match);
+        if(match) anyMatch = true;
+      });
+      letterEl.classList.toggle('gloss-hidden', !anyMatch);
+      if(q !== '' && anyMatch){ letterEl.classList.add('open'); }
+      else if(q === ''){ letterEl.classList.remove('open'); }
+    });
+  }
+
+  // Feedback stars
+  (function(){
+    const wrap = document.getElementById('feedbackStars');
+    if(!wrap) return;
+    let rating = 0;
+    const stars = wrap.querySelectorAll('.star');
+    stars.forEach(star=>{
+      star.addEventListener('click', ()=>{
+        rating = parseInt(star.dataset.v, 10);
+        stars.forEach(s=> s.classList.toggle('filled', parseInt(s.dataset.v,10) <= rating));
+      });
+    });
+    const submitBtn = document.getElementById('feedbackSubmit');
+    if(submitBtn){
+      submitBtn.addEventListener('click', ()=>{
+        const text = document.querySelector('.feedback-text').value;
+        const starsText = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        const recipients = 'coursemanager@playpcs.com';
+        const subject = encodeURIComponent('Negotiation Module Feedback');
+        const body = encodeURIComponent(
+          'Rating: ' + starsText + ' (' + rating + '/5)\n\n' +
+          'Comments:\n' + (text.trim() || '(no comment provided)')
+        );
+        window.location.href = 'mailto:' + recipients + '?subject=' + subject + '&body=' + body;
+        submitBtn.textContent = 'Opening your email app...';
+        setTimeout(()=>{ submitBtn.innerHTML = 'Send feedback <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'; }, 2200);
+      });
+    }
+  })();
+
+  // Signature hero motif: container-block grid echoing the PVL logo geometry
+  (function(){
+    const stack = document.getElementById('containerStack');
+    const palette = ['#468BD0','#FCB434','#E84E1B','#0C4494','#7fb3e0','#ffd27a'];
+    const cells = 30;
+    for(let i=0;i<cells;i++){
+      const el = document.createElement('i');
+      const isFilled = Math.random() > 0.32;
+      el.style.background = isFilled ? palette[Math.floor(Math.random()*palette.length)] : 'rgba(255,255,255,0.06)';
+      el.style.animationDelay = (Math.random()*0.9).toFixed(2)+'s';
+      stack.appendChild(el);
+    }
+  })();
+</script>
+
+</body>
+</html>
